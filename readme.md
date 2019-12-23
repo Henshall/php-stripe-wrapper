@@ -34,25 +34,25 @@ cents (1/100) of the value of your currency. ex. 1000 USD = $10.
 Use this to create a simple pop-up form.
 ```html
 <form class="" action="/pay" method="post">
-            <input type="hidden" name="_token" value="insert_csrf_token_here">
-            <script
-                    id="stripe_script"
-                    src="https://checkout.stripe.com/checkout.js"
-                    class="stripe-button"
-                    data-key="pk_test_Esadfkjasjhdflkahjsfkajhs"
-                    data-amount="1000"
-                    data-name="Your App Name"
-                    data-description=" Payment For : Some Product"
-                    data-locale="auto"
-                    data-currency="USD"
-                    data-label="Purchase (Credit Card) $10">
-                    </script>
-        </form>
+    <input type="hidden" name="_token" value="insert_csrf_token_here">
+    <script
+    id="stripe_script"
+    src="https://checkout.stripe.com/checkout.js"
+    class="stripe-button"
+    data-key="pk_test_Esadfkjasjhdflkahjsfkajhs"
+    data-amount="1000"
+    data-name="Your App Name"
+    data-description=" Payment For : Some Product"
+    data-locale="auto"
+    data-currency="USD"
+    data-label="Purchase (Credit Card) $10">
+    </script>
+</form>
 ```
 
 
 ### Front End Example 2:
-Use this to create an inline form
+Use this to create an inline form with bootstrap
 ```html
 <body>
     <div class="container">
@@ -192,7 +192,7 @@ to process events like customer creation and payments.
 
 Please see below for some example of what you can do with the token.
 
-### Charge an anonymous person. 
+### Charge an anonymous person (one time charge). 
 Use this to charge customers when you don't need to collect information such as their address, or instructions regarding the product/service.
 ```php
 $sw = new StripeWrapper;
@@ -203,7 +203,7 @@ if ($sw->error) {
 }
 ```
 
-### Create a customer and then charge that customer
+### Create a customer and then charge that customer (one time charge)
 Use this when you want to collect information about a customer. We will create a 
 customer object in stripe, and then charge the customer after.
 ```php
@@ -217,9 +217,9 @@ if ($sw->error) {
 ```
 
 
-### Charge an existing customer a one time charge (without creating a new customer).
+### Charge an existing customer (one time charge).
 Use this when you already have a customer - ei, you want to charge an existing customer
-with one one time fee.
+with one one time fee. Here we need to retrieve a customer from stripe.
 ```php
 $sw = new StripeWrapper;
 // set secret key and pass to stripe.
@@ -234,7 +234,7 @@ if ($sw->error) {
 ```
 
 
-### Create Subscriptions and charge new customers on a recurring basis. 
+### Create Subscriptions and charge new customers on a recurring basis. (subscription)
 To create subscriptions with stripe, we first need to create a customer in stripe as well as a plan.
 We need both to create a subscription. Its possible to use existing customers and plans you have previously created
 but here we will create a new plan, and a new customer, and use them to create a subscription. 
@@ -274,7 +274,7 @@ if ($sw->error) {
 
 
 
-### Create Subscriptions and charge existing customers on a recurring basis. 
+### Create Subscriptions and charge existing customers on a recurring basis. (subscription)
 Here we will assume that you have already have a customer and a plan set up.
 We will use them to create a subscription. Use this if you need to charge an existing customer.
 ```php
