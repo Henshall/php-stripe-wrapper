@@ -192,8 +192,8 @@ to process events like customer creation and payments.
 
 Please see below for some example of what you can do with the token.
 
-###Charge an anonymous person. 
-Use this to charge customers when you dont need to collect information such as their address, or instructions regarding the product/service.
+### Charge an anonymous person. 
+Use this to charge customers when you don't need to collect information such as their address, or instructions regarding the product/service.
 ```php
 $sw = new StripeWrapper;
 $sw->setApiKey("sk_test_kalsdjfsdkfjasdfjkasjdfjs");
@@ -203,7 +203,7 @@ if ($sw->error) {
 }
 ```
 
-###Create a customer and then charge that customer
+### Create a customer and then charge that customer
 Use this when you want to collect information about a customer. We will create a 
 customer object in stripe, and then charge the customer after.
 ```php
@@ -239,9 +239,8 @@ To create subscriptions with stripe, we first need to create a customer in strip
 We need both to create a subscription. Its possible to use existing customers and plans you have previously created
 but here we will create a new plan, and a new customer, and use them to create a subscription. 
 
-First create a plan - run this code only one time to create a plan we will continue to use
-for all future subscriptions. 
-
+#### 1) create a plan 
+run this code only one time to create a plan we will continue to usefor all future subscriptions. 
 ```php
 $sw = new StripeWrapper;
 $sw->setApiKey("sk_test_Gc4sdfgsdfhghsdfghsdjjjjhggg");
@@ -257,7 +256,8 @@ if ($sw->error) {
 }
 ```
 
-Secondly once the plan is set up, we can create a customer and use them to create the subscription.
+#### 2) Create subscription
+Once the plan is set up, we can create a customer and use them to create the subscription.
 ```php
 $sw = new StripeWrapper;
 $sw->setApiKey("sk_test_Gsdfsdahfjshadfjhsadfjh");
@@ -268,7 +268,6 @@ if ($sw->error) {
 // Where to put your logic if there is an error. (Save error to DB, or log file, or email to yourself etc.)
 }
 ```
-
 
 ### Create Subscriptions and charge existing customers on a recurring basis. 
 Here we will assume that you have already have a customer and a plan set up.
