@@ -4,43 +4,39 @@ namespace App\Classes;
 
 class StripeWrapper 
 {
-    public $local_public_key;
-    public $local_private_key;
-    public $currency;
-    public $charge_amount;
-    public $stripe_token;
-    public $description;
     public $error = NULL;
-    public $created_customer;
     
-    public function anonymousOneTimeCharge(){        
+    public function anonymousOneTimeCharge($data){        
         if ($this->error) {return "error";}
         try {
-            \Stripe\Charge::create([
-                'amount' => $data["amount"],
-                'currency' => $data["currency"],
-                'description' => $data["description"],
-                'source' => $data["stripe_token"],
-            ]);
+            \Stripe\Charge::create($data);
         } catch (\Exception $e) {
             $this->error = $e;
         }
     }
     
-    public function retrievePlans($customer_id){  
+    public function retrievePlans(){  
         if ($this->error) {return "error";} 
-        return \Stripe\Plan::all();
+        try {
+            return \Stripe\Plan::all()["data"];
+        } catch (\Exception $e) {
+            $this->error = $e;
+        }
+    }  
+    
+    public function retrievePlan($plan_id){  
+        if ($this->error) {return "error";} 
+        try {
+            return \Stripe\Plan::retrieve($plan_id);
+        } catch (\Exception $e) {
+            $this->error = $e;
+        }
     }  
     
     public function chargeCustomer($data){       
         if ($this->error) {return "error";}
         try {
-            \Stripe\Charge::create([
-                'amount' => $data["amount"],
-                'currency' => $data["currency"],
-                'description' => $data["description"],
-                'customer' => $data["customer_id"],
-            ]);
+            return \Stripe\Charge::create($data);
         } catch (\Exception $e) {
             $this->error = $e;
         }
@@ -49,16 +45,10 @@ class StripeWrapper
     public function createCustomer($data){
         if ($this->error) {return "error";}
         try {
-            $this->created_customer = \Stripe\Customer::create(array(
-                "description" => $data["description"],
-                "source" => $data["stripe_token"],
-                "email" => $data["email"],
-                "name" => $data["name"]
-            ));
+            return \Stripe\Customer::create($data);
         } catch (\Exception $e) {
             $this->error = $e;
         }
-        
     }
     // Create a stripe customer
     public function setApiKey($key){
@@ -70,18 +60,32 @@ class StripeWrapper
         }
     }
     
-    public function createSubscription($customer_id){
+    public function retrieveCustomer($customer_id){
+        if ($this->error) {return "error";}
+        try {
+            \Stripe\Customer::retrieve($customer_id);
+        } catch (\Exception $e) {
+            $this->error = $e;
+        }
+    }
+    
+    public function createPlan($data){
+        if ($this->error) {return "error";}
+        try {
+            \Stripe\Plan::create($data);
+        } catch (\Exception $e) {
+            $this->error = $e;
+        }
+    }
+    
+    public function createSubscription($customer, $plan){
         if ($this->error) {return "error";}
         try {
             if ($this->error) {return "error";}
-            return \Stripe\Subscription::create(array(
-                "customer" => $customer_id,
-                "items" => array(
-                    array(
-                        "plan" => $plan,
-                    ),
-                )
-            ));
+            return \Stripe\Subscription::create([
+                "customer" => $customer->id,
+                "items" => [["plan" => $plan]]
+            ]);
         } catch (\Exception $e) {
             $this->error = $e;
         }
