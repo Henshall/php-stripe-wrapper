@@ -188,20 +188,20 @@ to process events like customer creation and payments.
 
 Please see below for some example of what you can do with the token.
 
-###Charge an anonymous person. 
+### Charge an anonymous person. 
 Use this to charge customers when you dont need to collect information such as their address, or instructions regarding the product/service.
 ```bash
-$sw = new StripeWrapper;
-$sw->setApiKey("sk_test_kalsdjfsdkfjasdfjkasjdfjs");
-$sw->anonymousOneTimeCharge(['amount' => 1000, 'currency' => "USD", 
-'description' => "Payment for xyz service or product", "source" => $_POST["stripeToken"]]);
-if ($sw->error) {
-    // Where to put your logic if there is an error. (Save error to DB, or log file, or email to yourself etc.)
-die($sw->error);
-}
+# $sw = new StripeWrapper;
+# $sw->setApiKey("sk_test_kalsdjfsdkfjasdfjkasjdfjs");
+# $sw->anonymousOneTimeCharge(['amount' => 1000, 'currency' => "USD", 
+# 'description' => "Payment for xyz service or product", "source" => $_POST["stripeToken"]]);
+# if ($sw->error) {
+#     // Where to put your logic if there is an error. (Save error to DB, or log file, or email to yourself etc.)
+# die($sw->error);
+# }
 ```
 
-###Create a customer and then charge that customer
+### Create a customer and then charge that customer
 Use this when you want to collect information about a customer. We will create a 
 customer object in stripe, and then charge the customer after.
 ```bash
