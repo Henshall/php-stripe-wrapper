@@ -32,7 +32,7 @@ cents (1/100) of the value of your currency. ex. 1000 USD = $10.
 
 ### Front End Example 1:
 Use this to create a simple pop-up form.
-```bash
+```html
 <form class="" action="/pay" method="post">
             <input type="hidden" name="_token" value="insert_csrf_token_here">
             <script
@@ -239,7 +239,7 @@ To create subscriptions with stripe, we first need to create a customer in strip
 We need both to create a subscription. Its possible to use existing customers and plans you have previously created
 but here we will create a new plan, and a new customer, and use them to create a subscription. 
 
-#### 1) create a plan 
+#### 1) Create a plan 
 Option A) Login into Strip and create a plan manually under the billing/products tab.
 
 Option B) Run the following code only one time to create a plan we will continue to use the plan for all future subscriptions. 
