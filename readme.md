@@ -21,7 +21,7 @@ composer require henshall\stripe_wrapper
 # Usage:
 
 To process payments with stripe we need two things, to collect the credit card (and other) information from the customers on a front end HTML form, and then to process this information and send it to stripe on the back end.
-I have divided the usage section into 1) front end examples and 2) back end examples. You need both to process payments.
+I have divided the usage section into 1) front end examples and 2) back end examples. You need both to process payments (unless you want to charge your pre-existing stripe customers).
 
 
 ## Front End:
@@ -276,9 +276,6 @@ if ($sw->error) {
 }
 ```
 
-
-
-
 ### Create Subscriptions and charge existing customer (subscription)
 Here we will assume that you have already have a customer and a plan set up.
 We will use them to create a subscription. Use this if you need to charge an existing customer.
@@ -296,6 +293,16 @@ if ($sw->error) {
 
 
 
+# Process Webhooks
 
+Stripe webhooks can difficult to configure - so I wanted to include a few functions to help users process
+their webhooks. 
 
+The following code will provide you with a $webhook_data object you can parse.
+There is no need to receive parameters from the post request because the @file_get_contents("php://input")
+function will return raw data from the request body that stripe sends us.
+```php
+$sw = new StripeWrapper;
+$webhook_data = $sw->getWebhookInput(@file_get_contents("php://input"));   
+```
 
