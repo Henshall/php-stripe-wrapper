@@ -199,7 +199,8 @@ $sw = new StripeWrapper;
 $sw->setApiKey("sk_test_kalsdjfsdkfjasdfjkasjdfjs");
 $sw->anonymousOneTimeCharge(['amount' => 1000, 'currency' => "USD", 'description' => "Payment for xyz service or product", "source" => $_POST["stripeToken"]]);
 if ($sw->error) {
-// Where to put your logic if there is an error. (Save error to DB, or log file, or email to yourself etc.)
+    // Where to put your logic if there is an error. (Save error to DB, or log file, or email to yourself etc.)
+    // die($sw->error));
 }
 ```
 
@@ -212,7 +213,8 @@ $sw->setApiKey("sk_test_Gsdfsdfsdfsdfsdfdsfsdfsdfsdfsdf");
 $customer = $sw->createCustomer(["name" => "testing dude", "email" => "test@test.com", "description" => "im a real person", "source" => $_POST["stripeToken"]]);
 $sw->chargeCustomer(['amount' => 1000, 'currency' => "USD", 'description' => "Payment for xyz service or product", 'customer' => $customer]);
 if ($sw->error) {
-// Where to put your logic if there is an error. (Save error to DB, or log file, or email to yourself etc.)
+    // Where to put your logic if there is an error. (Save error to DB, or log file, or email to yourself etc.)
+    // die($sw->error));
 }
 ```
 
@@ -229,7 +231,8 @@ $customer = $sw->retrieveCustomer("cus_GPeOHGPqGH1fdd");
 //create charge
 $sw->chargeCustomer(['amount' => 1000, 'currency' => "USD", 'description' => "Payment for xyz service or product", 'customer_id' => $customer]);
 if ($sw->error) {
-// Where to put your logic if there is an error. (Save error to DB, or log file, or email to yourself etc.)
+    // Where to put your logic if there is an error. (Save error to DB, or log file, or email to yourself etc.)
+    // die($sw->error));
 }
 ```
 
@@ -255,6 +258,7 @@ $sw->setApiKey("sk_test_Gc4sdfgsdfhghsdfghsdjjjjhggg");
 $sw->createPlan(['id' => "40_dollar_monthly_subscription", 'amount' => 4000, 'currency' => "NZD", 'interval' => "month", 'product' => ['name' => 'subscriptions']]);
 if ($sw->error) {
     // Where to put your logic if there is an error. (Save error to DB, or log file, or email to yourself etc.)
+    // die($sw->error));
 }
 ```
 
@@ -267,7 +271,8 @@ $plan = $sw->retrievePlan("40_dollar_monthly_subscription");
 $customer = $sw->createCustomer(["name" => "testing dude", "email" => "test@test.com", "description" => "im a real person", "source" => $_POST["stripeToken"]]);
 $sw->createSubscription($customer, $plan);
 if ($sw->error) {
-// Where to put your logic if there is an error. (Save error to DB, or log file, or email to yourself etc.)
+    // Where to put your logic if there is an error. (Save error to DB, or log file, or email to yourself etc.)
+    // die($sw->error));
 }
 ```
 
@@ -285,7 +290,7 @@ $plan = $sw->retrievePlan("40_dollar_monthly_subscription");
 $sw->createSubscription($customer, $plan);
 if ($sw->error) {
     // Where to put your logic if there is an error. (Save error to DB, or log file, or email to yourself etc.)
-    die($sw->error);
+    // die($sw->error);
 }
 ```
 
