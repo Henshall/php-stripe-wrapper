@@ -8,7 +8,7 @@ class StripeWrapper
     
     // Charges a credit card one time
     public function anonymousOneTimeCharge($data){        
-        if ($this->error) {return "error";}
+        if ($this->error) {return $this->error;}
         try {
             return \Stripe\Charge::create($data);
         } catch (\Exception $e) {
@@ -19,7 +19,7 @@ class StripeWrapper
     
     // Create a stripe customer
     public function createCustomer($data){
-        if ($this->error) {return "error";}
+        if ($this->error) {return $this->error;}
         try {
             return \Stripe\Customer::create($data);
         } catch (\Exception $e) {
@@ -30,7 +30,7 @@ class StripeWrapper
     
     // Charges a stripe customer
     public function customerOneTimeCharge($data){       
-        if ($this->error) {return "error";}
+        if ($this->error) {return $this->error;}
         try {
             return \Stripe\Charge::create($data);
         } catch (\Exception $e) {
@@ -41,7 +41,7 @@ class StripeWrapper
     
     // Sets Stripe api key (this wrapper normally just uses the secret key)
     public function setApiKey($key){
-        if ($this->error) {return "error";}
+        if ($this->error) {return $this->error;}
         try {
             return \Stripe\Stripe::setApiKey($key);
         } catch (\Exception $e) {
@@ -52,7 +52,7 @@ class StripeWrapper
     
     // returns an instance of a stripe customer
     public function retrieveCustomer($customer_id){
-        if ($this->error) {return "error";}
+        if ($this->error) {return $this->error;}
         try {
             return \Stripe\Customer::retrieve($customer_id);
         } catch (\Exception $e) {
@@ -63,7 +63,7 @@ class StripeWrapper
     
     // Creates a Plan. 
     public function createPlan($data){
-        if ($this->error) {return "error";}
+        if ($this->error) {return $this->error;}
         try {
             return \Stripe\Plan::create($data);
         } catch (\Exception $e) {
@@ -74,9 +74,9 @@ class StripeWrapper
     
     // Creates a Subscription
     public function ChargeAndSubscribeCustomerToPlan($customer, $plan){
-        if ($this->error) {return "error";}
+        if ($this->error) {return $this->error;}
         try {
-            if ($this->error) {return "error";}
+            if ($this->error) {return $this->error;}
             return \Stripe\Subscription::create([
                 "customer" => $customer->id,
                 "items" => [["plan" => $plan]]
@@ -90,7 +90,7 @@ class StripeWrapper
 
     // Retrieves a subscription.
     public function retrieveSubscription($sub_id){
-        if ($this->error) {return "error";}
+        if ($this->error) {return $this->error;}
         try {
             return \Stripe\Subscription::retrieve($sub_id);
         } catch (\Exception $e) {
@@ -101,7 +101,7 @@ class StripeWrapper
     
     // Cancels a subscription.
     public function CancelSubscription($sub){
-        if ($this->error) {return "error";}
+        if ($this->error) {return $this->error;}
         try {
             $sub->cancel();
             return $sub;
@@ -113,7 +113,7 @@ class StripeWrapper
     
     // Retrieves all Plans
     public function retrievePlans(){  
-        if ($this->error) {return "error";} 
+        if ($this->error) {return $this->error;} 
         try {
             return \Stripe\Plan::all()["data"];
         } catch (\Exception $e) {
@@ -124,7 +124,7 @@ class StripeWrapper
     
     // Retrieves a single Plan
     public function retrievePlan($plan_id){  
-        if ($this->error) {return "error";} 
+        if ($this->error) {return $this->error;} 
         try {
             return \Stripe\Plan::retrieve($plan_id);
         } catch (\Exception $e) {
