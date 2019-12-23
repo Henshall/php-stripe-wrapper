@@ -24,12 +24,13 @@ To process payments with stripe we need two things, to collect the credit card (
 I have divided the usage section into 1) front end examples and 2) back end examples. You need both to process payments.
 
 
-#Front End:
+## Front End:
+
 Create a form on your HTML page like so. Here you will capture customer information for later use.
 Make sure to include your public stripe key. in the data-key section, and the data-amount should be in 
 cents (1/100) of the value of your currency. ex. 1000 USD = $10.
 
-Front End Example 1:
+### Front End Example 1:
 Use this to create a simple pop-up form.
 ```bash
 <form class="" action="/pay" method="post">
@@ -50,7 +51,7 @@ Use this to create a simple pop-up form.
 ```
 
 
-Front End Example 2:
+### Front End Example 2:
 Use this to create an inline form
 ```bash
 <body>
@@ -75,10 +76,6 @@ Use this to create an inline form
     </div>
     
     <style media="screen">
-    /**
-    * The CSS shown here will not be introduced in the Quickstart guide, but shows
-    * how you can use CSS to style your Element's container.
-    */
     #card-element{
         width:100%;
         border-style: solid;
@@ -139,12 +136,12 @@ Use this to create an inline form
     };
     // Create an instance of the card Element.
     var card = elements.create('card', {style: style});
-    // Add an instance of the card Element into the `card-element` <div>.
+    // Add an instance of the card Element into the 'card-element' <div>.
     card.mount('#card-element');
     // Handle real-time validation errors from the card Element.
     card.addEventListener('change', function(event) {
         var displayError = document.getElementById('card-errors');
-        if (event.error) {
+        if(event.error) {
             displayError.textContent = event.error.message;
         } else {
             displayError.textContent = '';
@@ -155,11 +152,11 @@ Use this to create an inline form
     form.addEventListener('submit', function(event) {
         event.preventDefault();
         stripe.createToken(card).then(function(result) {
-            if (result.error) {
-                // Inform the user if there was an error.
+            if(result.error) {
+                // Inform the user when there was an error.
                 var errorElement = document.getElementById('card-errors');
                 errorElement.textContent = result.error.message;
-            } else {
+            } else{
                 // Send the token to your server.
                 stripeTokenHandler(result.token);
             }
@@ -182,7 +179,8 @@ Use this to create an inline form
 </body>
 ```
 
-#Back End:
+
+## Back End:
 Back End Notes: you can see in the examples that the form will send a post request to /pay. 
 Before it hits this location, it will send a request to stripe servers
 with the information and return a token (["stripeToken"]). We can use this token on the back end
