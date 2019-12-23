@@ -293,6 +293,21 @@ if ($sw->error) {
 
 
 
+
+### Unsubscribe A Subscription.
+To unsubscribe a subscription we need to get the subscription (use the stripe objects id to retrieve the subscription )
+```php
+$sw = new StripeWrapper;
+$sw->setApiKey("sk_test_Gsdfsdahfjshadfjhsadfjh");
+$sw->CancelSubscription($sw->retrieveSubscription($stripe_sub_id));
+if ($sw->error) {
+    // Where to put your logic if there is an error. (Save error to DB, or log file, or email to yourself etc.)
+    // die($sw->error);
+}
+```
+
+
+
 # Process Webhooks
 
 Stripe webhooks can difficult to configure - so I wanted to include a few functions to help users process

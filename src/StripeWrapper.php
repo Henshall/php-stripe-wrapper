@@ -12,7 +12,7 @@ class StripeWrapper
         try {
             \Stripe\Charge::create($data);
         } catch (\Exception $e) {
-            $this->error = $e;
+            $this->error = "failed anonymousOneTimeCharge " . $e;
         }
     }
     
@@ -22,7 +22,7 @@ class StripeWrapper
         try {
             return \Stripe\Customer::create($data);
         } catch (\Exception $e) {
-            $this->error = $e;
+            $this->error = "failed createCustomer " . $e;
         }
     }
     
@@ -32,7 +32,7 @@ class StripeWrapper
         try {
             return \Stripe\Charge::create($data);
         } catch (\Exception $e) {
-            $this->error = $e;
+            $this->error = "failed customerOneTimeCharge " . $e;
         }
     }
     
@@ -42,7 +42,7 @@ class StripeWrapper
         try {
             $key = \Stripe\Stripe::setApiKey($key);
         } catch (\Exception $e) {
-            $this->error = $e;
+            $this->error = "failed setApiKey " . $e;
         }
     }
     
@@ -52,7 +52,7 @@ class StripeWrapper
         try {
             \Stripe\Customer::retrieve($customer_id);
         } catch (\Exception $e) {
-            $this->error = $e;
+            $this->error = "failed retrieveCustomer " . $e;
         }
     }
     
@@ -62,7 +62,7 @@ class StripeWrapper
         try {
             \Stripe\Plan::create($data);
         } catch (\Exception $e) {
-            $this->error = $e;
+            $this->error = "failed createPlan " . $e;
         }
     }
     
@@ -76,7 +76,29 @@ class StripeWrapper
                 "items" => [["plan" => $plan]]
             ]);
         } catch (\Exception $e) {
-            $this->error = $e;
+            $this->error = "failed ChargeAndSubscribeCustomerToPlan " . $e;
+        }
+    }
+
+
+    // Retrieves a subscription.
+    public function retrieveSubscription($sub_id){
+        if ($this->error) {return "error";}
+        try {
+            return \Stripe\Subscription::retrieve($sub_id);
+        } catch (\Exception $e) {
+            $this->error = "failed retrieveSubscription " . $e;
+        }
+    }
+    
+    // Cancels a subscription.
+    public function CancelSubscription($sub){
+        if ($this->error) {return "error";}
+        try {
+            $sub->cancel();
+            return $sub;
+        } catch (\Exception $e) {
+            $this->error = "failed CancelSubscription " . $e;
         }
     }
     
@@ -86,7 +108,7 @@ class StripeWrapper
         try {
             return \Stripe\Plan::all()["data"];
         } catch (\Exception $e) {
-            $this->error = $e;
+            $this->error = "failed retrievePlans " . $e;
         }
     }  
     
@@ -96,7 +118,7 @@ class StripeWrapper
         try {
             return \Stripe\Plan::retrieve($plan_id);
         } catch (\Exception $e) {
-            $this->error = $e;
+            $this->error = "failed retrievePlan " . $e;
         }
     }  
     
@@ -109,7 +131,7 @@ class StripeWrapper
         try {
             return json_decode($data)->data->object;
         } catch (\Exception $e) {
-            $this->error = $e;
+            $this->error = "failed getWebhookInput " . $e;
         }
         return "success";
     }
