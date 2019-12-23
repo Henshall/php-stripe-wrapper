@@ -211,7 +211,7 @@ customer object in stripe, and then charge the customer after.
 $sw = new StripeWrapper;
 $sw->setApiKey("sk_test_Gsdfsdfsdfsdfsdfdsfsdfsdfsdfsdf");
 $customer = $sw->createCustomer(["name" => "testing dude", "email" => "test@test.com", "description" => "im a real person", "source" => $_POST["stripeToken"]]);
-$sw->chargeCustomer(['amount' => 1000, 'currency' => "USD", 'description' => "Payment for xyz service or product", 'customer' => $customer]);
+$sw->customerOneTimeCharge(['amount' => 1000, 'currency' => "USD", 'description' => "Payment for xyz service or product", 'customer' => $customer]);
 if ($sw->error) {
     // Where to put your logic if there is an error. (Save error to DB, or log file, or email to yourself etc.)
     // die($sw->error));
@@ -229,7 +229,7 @@ $sw->setApiKey("sk_test_sdfkasdjsdfsdfsdfsdffdfsd");
 //pass the customer id from stripe to get the customer object
 $customer = $sw->retrieveCustomer("cus_GPeOHGPqGH1fdd");
 //create charge
-$sw->chargeCustomer(['amount' => 1000, 'currency' => "USD", 'description' => "Payment for xyz service or product", 'customer_id' => $customer]);
+$sw->customerOneTimeCharge(['amount' => 1000, 'currency' => "USD", 'description' => "Payment for xyz service or product", 'customer_id' => $customer]);
 if ($sw->error) {
     // Where to put your logic if there is an error. (Save error to DB, or log file, or email to yourself etc.)
     // die($sw->error));
@@ -269,7 +269,7 @@ $sw = new StripeWrapper;
 $sw->setApiKey("sk_test_Gsdfsdahfjshadfjhsadfjh");
 $plan = $sw->retrievePlan("40_dollar_monthly_subscription");        
 $customer = $sw->createCustomer(["name" => "testing dude", "email" => "test@test.com", "description" => "im a real person", "source" => $_POST["stripeToken"]]);
-$sw->createSubscription($customer, $plan);
+$sw->ChargeAndSubscribeCustomerToPlan($customer, $plan);
 if ($sw->error) {
     // Where to put your logic if there is an error. (Save error to DB, or log file, or email to yourself etc.)
     // die($sw->error));
@@ -284,7 +284,7 @@ $sw = new StripeWrapper;
 $sw->setApiKey("sk_test_Gsdfsdahfjshadfjhsadfjh");
 $customer = $sw->retrieveCustomer("cus_GPeOHGPqGH1Qhc");
 $plan = $sw->retrievePlan("40_dollar_monthly_subscription");
-$sw->createSubscription($customer, $plan);
+$sw->ChargeAndSubscribeCustomerToPlan($customer, $plan);
 if ($sw->error) {
     // Where to put your logic if there is an error. (Save error to DB, or log file, or email to yourself etc.)
     // die($sw->error);
@@ -350,7 +350,7 @@ try {
 $sw = new StripeWrapper;
 $sw->setApiKey("sk_test_Gsdfsdfsdfsdfsdfdsfsdfsdfsdfsdf");
 $customer = $sw->createCustomer(["name" => "testing dude", "email" => "test@test.com", "description" => "im a real person", "source" => $_POST["stripeToken"]]);
-$sw->chargeCustomer(['amount' => 1000, 'currency' => "USD", 'description' => "Payment for xyz service or product", 'customer' => $customer]);
+$sw->customerOneTimeCharge(['amount' => 1000, 'currency' => "USD", 'description' => "Payment for xyz service or product", 'customer' => $customer]);
 if ($sw->error) {
     // Create error message for admins to see if payment failed. This is important!
     $error = new Error;

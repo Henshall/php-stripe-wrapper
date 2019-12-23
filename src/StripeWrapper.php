@@ -27,7 +27,7 @@ class StripeWrapper
     }
     
     // Charges a stripe customer
-    public function chargeCustomer($data){       
+    public function customerOneTimeCharge($data){       
         if ($this->error) {return "error";}
         try {
             return \Stripe\Charge::create($data);
@@ -67,7 +67,7 @@ class StripeWrapper
     }
     
     // Creates a Subscription
-    public function createSubscription($customer, $plan){
+    public function ChargeAndSubscribeCustomerToPlan($customer, $plan){
         if ($this->error) {return "error";}
         try {
             if ($this->error) {return "error";}
