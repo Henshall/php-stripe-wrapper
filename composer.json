@@ -7,7 +7,7 @@
     }],
     "minimum-stability": "dev",
     "require": {
-        "stripe/stripe-php",
+        "stripe/stripe-php": "@dev"
     },
     "autoload": {
         "psr-4": {
