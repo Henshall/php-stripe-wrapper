@@ -197,8 +197,7 @@ Use this to charge customers when you dont need to collect information such as t
 ```php
 $sw = new StripeWrapper;
 $sw->setApiKey("sk_test_kalsdjfsdkfjasdfjkasjdfjs");
-$sw->anonymousOneTimeCharge(['amount' => 1000, 'currency' => "USD", 
-'description' => "Payment for xyz service or product", "source" => $_POST["stripeToken"]]);
+$sw->anonymousOneTimeCharge(['amount' => 1000, 'currency' => "USD", 'description' => "Payment for xyz service or product", "source" => $_POST["stripeToken"]]);
 if ($sw->error) {
     // Where to put your logic if there is an error. (Save error to DB, or log file, or email to yourself etc.)
 die($sw->error);
@@ -209,16 +208,14 @@ die($sw->error);
 Use this when you want to collect information about a customer. We will create a 
 customer object in stripe, and then charge the customer after.
 ```php
-    $sw = new StripeWrapper;
-    $sw->setApiKey("sk_test_Gsdfsdfsdfsdfsdfdsfsdfsdfsdfsdf");
-    $customer = $sw->createCustomer(["name" => "testing dude", "email" => "test@test.com", 
-    "description" => "im a real person", "source" => $_POST["stripeToken"]]);
-    $sw->chargeCustomer(['amount' => 1000, 'currency' => "USD", 
-    'description' => "Payment for xyz service or product", 'customer' => $customer]);
-    if ($sw->error) {
-        // Where to put your logic if there is an error. (Save error to DB, or log file, or email to yourself etc.)
-    die($sw->error);
-    }
+$sw = new StripeWrapper;
+$sw->setApiKey("sk_test_Gsdfsdfsdfsdfsdfdsfsdfsdfsdfsdf");
+$customer = $sw->createCustomer(["name" => "testing dude", "email" => "test@test.com", "description" => "im a real person", "source" => $_POST["stripeToken"]]);
+$sw->chargeCustomer(['amount' => 1000, 'currency' => "USD", 'description' => "Payment for xyz service or product", 'customer' => $customer]);
+if ($sw->error) {
+    // Where to put your logic if there is an error. (Save error to DB, or log file, or email to yourself etc.)
+die($sw->error);
+}
 ```
 
 
