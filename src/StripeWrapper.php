@@ -94,15 +94,11 @@ class StripeWrapper
     public function getWebhookInput($data){   
         if (!$data || $data == NULL || $data == "") {
             $this->error = "the input (@file_get_contents('php://input')) for the getWebhookInput method failed, data not passed correctly";
-            var_dump(http_response_code(500));
-            die($this->error);
         }
         try {
             return json_decode($data)->data->object;
         } catch (\Exception $e) {
             $this->error = $e;
-            var_dump(http_response_code(500));
-            die($this->error);
         }
         return "success";
     }

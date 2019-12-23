@@ -303,6 +303,14 @@ There is no need to receive parameters from the post request because the @file_g
 function will return raw data from the request body that stripe sends us.
 ```php
 $sw = new StripeWrapper;
-$webhook_data = $sw->getWebhookInput(@file_get_contents("php://input"));   
+$webhook_data = $sw->getWebhookInput(@file_get_contents("php://input"));  
+if ($sw->error) {
+    // Where to put your logic if there is an error. (Save error to DB, or log file, or email to yourself etc.)
+    var_dump(http_response_code(500));
+    die($this->error);
+} 
 ```
+
+
+
 
