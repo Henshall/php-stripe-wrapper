@@ -234,7 +234,7 @@ if ($sw->error) {
 ```
 
 
-### Create Subscriptions and charge new customers on a recurring basis. (subscription)
+### Create Subscriptions and charge new customer (subscription)
 To create subscriptions with stripe, we first need to create a customer in stripe as well as a plan.
 We need both to create a subscription. Its possible to use existing customers and plans you have previously created
 but here we will create a new plan, and a new customer, and use them to create a subscription. 
@@ -274,7 +274,7 @@ if ($sw->error) {
 
 
 
-### Create Subscriptions and charge existing customers on a recurring basis. (subscription)
+### Create Subscriptions and charge existing customer (subscription)
 Here we will assume that you have already have a customer and a plan set up.
 We will use them to create a subscription. Use this if you need to charge an existing customer.
 ```php
