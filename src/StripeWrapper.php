@@ -10,11 +10,21 @@ class StripeWrapper
     public function setApiKey($key){
         if ($this->error) {return $this->error;}
         try {
-            // this method does not test to see if the apikey is correct, or even if its a string.
-            // it should therefore never fail, and we should never see this error.
+            if (!$key) {
+                throw new \Exception("apiKey does not exist", 1);
+            }
+            if (!is_string($key)) {
+                throw new \Exception("apiKey is not a string", 1);
+            } 
+            if (15 > strlen($key)) {
+                throw new \Exception("apiKey is less then 15 characters", 1);
+            }
+            if (strpos($key, 'test') !== false && strpos($key, 'live') !== false){
+                throw new \Exception("apiKey does not have the word 'live' or 'test' in it, and therefore is not a stripe api key", 1);
+            } 
             return \Stripe\Stripe::setApiKey($key);
         } catch (\Exception $e) {
-            $this->error = "failed setApiKey method" . $e;
+            $this->error = "failed setApiKey " . $e;
             return $this->error;
         }
     }
@@ -88,8 +98,8 @@ class StripeWrapper
             return $this->error;
         }
     }
-
-
+    
+    
     // Retrieves a subscription.
     public function retrieveSubscription($sub_id){
         if ($this->error) {return $this->error;}
