@@ -18,7 +18,7 @@ composer require henshall\stripe_wrapper
 - Create a Stripe account (https://stripe.com/)
 - Get your Public and Secret key's in the developers section. 
 
-## Usage:
+# Usage:
 
 To process payments with stripe we need two things, to collect the credit card (and other) information from the customers on a front end HTML form, and then to process this information and send it to stripe on the back end.
 I have divided the usage section into 1) front end examples and 2) back end examples. You need both to process payments.
