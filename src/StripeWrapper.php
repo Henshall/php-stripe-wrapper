@@ -10,6 +10,8 @@ class StripeWrapper
     public function setApiKey($key){
         if ($this->error) {return $this->error;}
         try {
+            // Stripe does not validate api key when set - we need to validate in this method before we set it.
+            // Validation will allow us to capture errors in this method.
             if (!$key) {
                 throw new \Exception("apiKey does not exist", 1);
             }
