@@ -330,6 +330,9 @@ problems processing payments and not know why.
 
 Your logic should look something like this:
 ```php
+...
+...
+...
 try {
     // stores subscription in database.
     $sub = SubscriptionDBModel::create($subscription_info);
