@@ -6,7 +6,7 @@ This is a wrapper for the Stripe PHP Package 'stripe/stripe-php'.
 I wanted to created this package to help simplify payment processing with
 Stripe - and help developers quickly start using stripe with lots of examples.
 Although this package is mostly a simple wrapper, it has a unique way of handling errors (important),
-processing web-hooks, works with stripe connect, and has documentation to provide
+processing web-hooks, working with stripe connect, and has documentation to provide
 lots of examples on how to use it.
 
 ## Installation with Composer:
