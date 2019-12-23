@@ -53,7 +53,7 @@ Use this to create a simple pop-up form.
 
 ### Front End Example 2:
 Use this to create an inline form
-```bash
+```html
 <body>
     <div class="container">
         <div class="row mt-5">
@@ -76,6 +76,10 @@ Use this to create an inline form
     </div>
     
     <style media="screen">
+    /**
+    * The CSS shown here will not be introduced in the Quickstart guide, but shows
+    * how you can use CSS to style your Element's container.
+    */
     #card-element{
         width:100%;
         border-style: solid;
@@ -136,12 +140,12 @@ Use this to create an inline form
     };
     // Create an instance of the card Element.
     var card = elements.create('card', {style: style});
-    // Add an instance of the card Element into the 'card-element' <div>.
+    // Add an instance of the card Element into the `card-element` <div>.
     card.mount('#card-element');
     // Handle real-time validation errors from the card Element.
     card.addEventListener('change', function(event) {
         var displayError = document.getElementById('card-errors');
-        if(event.error) {
+        if (event.error) {
             displayError.textContent = event.error.message;
         } else {
             displayError.textContent = '';
@@ -152,11 +156,11 @@ Use this to create an inline form
     form.addEventListener('submit', function(event) {
         event.preventDefault();
         stripe.createToken(card).then(function(result) {
-            if(result.error) {
-                // Inform the user when there was an error.
+            if (result.error) {
+                // Inform the user if there was an error.
                 var errorElement = document.getElementById('card-errors');
                 errorElement.textContent = result.error.message;
-            } else{
+            } else {
                 // Send the token to your server.
                 stripeTokenHandler(result.token);
             }
@@ -180,7 +184,7 @@ Use this to create an inline form
 ```
 
 
-## Back End:
+# Back End:
 Back End Notes: you can see in the examples that the form will send a post request to /pay. 
 Before it hits this location, it will send a request to stripe servers
 with the information and return a token (["stripeToken"]). We can use this token on the back end
@@ -188,23 +192,23 @@ to process events like customer creation and payments.
 
 Please see below for some example of what you can do with the token.
 
-### Charge an anonymous person. 
+###Charge an anonymous person. 
 Use this to charge customers when you dont need to collect information such as their address, or instructions regarding the product/service.
-```bash
-# $sw = new StripeWrapper;
-# $sw->setApiKey("sk_test_kalsdjfsdkfjasdfjkasjdfjs");
-# $sw->anonymousOneTimeCharge(['amount' => 1000, 'currency' => "USD", 
-# 'description' => "Payment for xyz service or product", "source" => $_POST["stripeToken"]]);
-# if ($sw->error) {
-#     // Where to put your logic if there is an error. (Save error to DB, or log file, or email to yourself etc.)
-# die($sw->error);
-# }
+```php
+$sw = new StripeWrapper;
+$sw->setApiKey("sk_test_kalsdjfsdkfjasdfjkasjdfjs");
+$sw->anonymousOneTimeCharge(['amount' => 1000, 'currency' => "USD", 
+'description' => "Payment for xyz service or product", "source" => $_POST["stripeToken"]]);
+if ($sw->error) {
+    // Where to put your logic if there is an error. (Save error to DB, or log file, or email to yourself etc.)
+die($sw->error);
+}
 ```
 
-### Create a customer and then charge that customer
+###Create a customer and then charge that customer
 Use this when you want to collect information about a customer. We will create a 
 customer object in stripe, and then charge the customer after.
-```bash
+```php
     $sw = new StripeWrapper;
     $sw->setApiKey("sk_test_Gsdfsdfsdfsdfsdfdsfsdfsdfsdfsdf");
     $customer = $sw->createCustomer(["name" => "testing dude", "email" => "test@test.com", 
@@ -221,7 +225,7 @@ customer object in stripe, and then charge the customer after.
 ### Charge an existing customer a one time charge (without creating a new customer).
 Use this when you already have a customer - ei, you want to charge an existing customer
 with one one time fee.
-```bash
+```php
 $sw = new StripeWrapper;
 // set secret key and pass to stripe.
 $sw->setApiKey("sk_test_sdfkasdjsdfsdfsdfsdffdfsd");
@@ -243,7 +247,7 @@ but here we will create a new plan, and a new customer, and use them to create a
 First create a plan - run this code only one time to create a plan we will continue to use
 for all future subscriptions. 
 
-```bash
+```php
 $sw = new StripeWrapper;
 $sw->setApiKey("sk_test_Gc4sdfgsdfhghsdfghsdjjjjhggg");
 // (Note: do not run this code with every subscription - we only need to create a plan one time.)
@@ -263,7 +267,7 @@ if ($sw->error) {
 ```
 
 Secondly once the plan is set up, we can create a customer and use them to create the subscription.
-```bash
+```php
 $sw = new StripeWrapper;
 $sw->setApiKey("sk_test_Gsdfsdahfjshadfjhsadfjh");
 $plan = $sw->retrievePlan("40_dollar_monthly_subscription");        
@@ -279,7 +283,7 @@ if ($sw->error) {
 ### Create Subscriptions and charge existing customers on a recurring basis. 
 Here we will assume that you have already have a customer and a plan set up.
 We will use them to create a subscription. Use this if you need to charge an existing customer.
-```bash
+```php
 $sw = new StripeWrapper;
 $sw->setApiKey("sk_test_Gsdfsdahfjshadfjhsadfjh");
 $customer = $sw->retrieveCustomer("cus_GPeOHGPqGH1Qhc");
