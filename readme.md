@@ -330,9 +330,10 @@ problems processing payments and not know why.
 
 Your logic should look something like this:
 ```php
-// create new subscription and update user->paid column.
 try {
-    $sub = Subscription::create($subscription_info);
+    // stores subscription in database.
+    $sub = SubscriptionDBModel::create($subscription_info);
+    //updates to show that user has paid.
     $user->paid = 1;
     $user->save();
 } catch (\Exception $e) {
@@ -348,11 +349,11 @@ $sw->setApiKey("sk_test_Gsdfsdfsdfsdfsdfdsfsdfsdfsdfsdf");
 $customer = $sw->createCustomer(["name" => "testing dude", "email" => "test@test.com", "description" => "im a real person", "source" => $_POST["stripeToken"]]);
 $sw->chargeCustomer(['amount' => 1000, 'currency' => "USD", 'description' => "Payment for xyz service or product", 'customer' => $customer]);
 if ($sw->error) {
-    // Create error message for admins to see
+    // Create error message for admins to see if payment failed. This is important!
     $error = new Error;
     $error->message = "subscription Failure during payment, card not charged. ----> " . $e ;
     $error->save();
-    // delete sub and remove user data. 
+    // Here we can reverse the changes to the user object previous modified as well as delete the subscription..
     $sub->delete();
     $user->paid = 0;
     $user->save();
