@@ -6,6 +6,19 @@ class StripeWrapper
 {
     public $error = NULL;
     
+    // Sets Stripe api key (this wrapper normally just uses the secret key)
+    public function setApiKey($key){
+        if ($this->error) {return $this->error;}
+        try {
+            // this method does not test to see if the apikey is correct, or even if its a string.
+            // it should therefore never fail, and we should never see this error.
+            return \Stripe\Stripe::setApiKey($key);
+        } catch (\Exception $e) {
+            $this->error = "failed setApiKey method" . $e;
+            return $this->error;
+        }
+    }
+    
     // Charges a credit card one time
     public function anonymousOneTimeCharge($data){        
         if ($this->error) {return $this->error;}
@@ -35,17 +48,6 @@ class StripeWrapper
             return \Stripe\Charge::create($data);
         } catch (\Exception $e) {
             $this->error = "failed customerOneTimeCharge " . $e;
-            return $this->error;
-        }
-    }
-    
-    // Sets Stripe api key (this wrapper normally just uses the secret key)
-    public function setApiKey($key){
-        if ($this->error) {return $this->error;}
-        try {
-            return \Stripe\Stripe::setApiKey($key);
-        } catch (\Exception $e) {
-            $this->error = "failed setApiKey " . $e;
             return $this->error;
         }
     }
