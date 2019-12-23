@@ -6,6 +6,7 @@ class StripeWrapper
 {
     public $error = NULL;
     
+    // Charges a credit card one time
     public function anonymousOneTimeCharge($data){        
         if ($this->error) {return "error";}
         try {
@@ -15,24 +16,17 @@ class StripeWrapper
         }
     }
     
-    public function retrievePlans(){  
-        if ($this->error) {return "error";} 
+    // Create a stripe customer
+    public function createCustomer($data){
+        if ($this->error) {return "error";}
         try {
-            return \Stripe\Plan::all()["data"];
+            return \Stripe\Customer::create($data);
         } catch (\Exception $e) {
             $this->error = $e;
         }
-    }  
+    }
     
-    public function retrievePlan($plan_id){  
-        if ($this->error) {return "error";} 
-        try {
-            return \Stripe\Plan::retrieve($plan_id);
-        } catch (\Exception $e) {
-            $this->error = $e;
-        }
-    }  
-    
+    // Charges a stripe customer
     public function chargeCustomer($data){       
         if ($this->error) {return "error";}
         try {
@@ -42,15 +36,7 @@ class StripeWrapper
         }
     }
     
-    public function createCustomer($data){
-        if ($this->error) {return "error";}
-        try {
-            return \Stripe\Customer::create($data);
-        } catch (\Exception $e) {
-            $this->error = $e;
-        }
-    }
-    // Create a stripe customer
+    // Sets Stripe api key (this wrapper normally just uses the secret key)
     public function setApiKey($key){
         if ($this->error) {return "error";}
         try {
@@ -60,6 +46,7 @@ class StripeWrapper
         }
     }
     
+    // returns an instance of a stripe customer
     public function retrieveCustomer($customer_id){
         if ($this->error) {return "error";}
         try {
@@ -69,6 +56,7 @@ class StripeWrapper
         }
     }
     
+    // Creates a Plan. 
     public function createPlan($data){
         if ($this->error) {return "error";}
         try {
@@ -78,6 +66,7 @@ class StripeWrapper
         }
     }
     
+    // Creates a Subscription
     public function createSubscription($customer, $plan){
         if ($this->error) {return "error";}
         try {
@@ -91,9 +80,31 @@ class StripeWrapper
         }
     }
     
+    // Retrieves all Plans
+    public function retrievePlans(){  
+        if ($this->error) {return "error";} 
+        try {
+            return \Stripe\Plan::all()["data"];
+        } catch (\Exception $e) {
+            $this->error = $e;
+        }
+    }  
+    
+    // Retrieves a single Plan
+    public function retrievePlan($plan_id){  
+        if ($this->error) {return "error";} 
+        try {
+            return \Stripe\Plan::retrieve($plan_id);
+        } catch (\Exception $e) {
+            $this->error = $e;
+        }
+    }  
+    
+    // Used to process webhook data.
     public function getWebhookInput($data){   
         if (!$data || $data == NULL || $data == "") {
             $this->error = "the input (@file_get_contents('php://input')) for the getWebhookInput method failed, data not passed correctly";
+            return $this->error;
         }
         try {
             return json_decode($data)->data->object;

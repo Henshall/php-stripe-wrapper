@@ -52,7 +52,7 @@ Use this to create a simple pop-up form.
 
 
 ### Front End Example 2:
-Use this to create an inline form with bootstrap
+Use this to create an inline form with bootstrap. When copying make sure to change the scrf token and insert your stripe public key.
 ```html
 <body>
     <div class="container">
@@ -312,5 +312,56 @@ if ($sw->error) {
 ```
 
 
+
+
+
+## Stripe Tips
+
+Lets say that once a user has a successful payment, you want to store the
+subscription in the database and also update the user record.
+
+The updating of the database should come first, and then credit card processing second.
+This is because all of the logic from the database can be reversed and even captured,
+while the credit card processing cannot easily be reversed (5 business days for refunds).
+
+Its a good idea to always use try/catch in anything that comes before or after 
+your payments so that you can capture any errors. You don't want to be having 
+problems processing payments and not know why.
+
+Your logic should look something like this:
+```php
+// create new subscription and update user->paid column.
+try {
+    $sub = Subscription::create($subscription_info);
+    $user->paid = 1;
+    $user->save();
+} catch (\Exception $e) {
+    $error = new Error;
+    $error->message = "subscription Failure before payment ----> " . $e ;
+    $error->save();
+    //return back to payment page with error message. 
+    return redirect()->back()->with("error", "Card not charged, could not create subscription");
+}
+
+$sw = new StripeWrapper;
+$sw->setApiKey("sk_test_Gsdfsdfsdfsdfsdfdsfsdfsdfsdfsdf");
+$customer = $sw->createCustomer(["name" => "testing dude", "email" => "test@test.com", "description" => "im a real person", "source" => $_POST["stripeToken"]]);
+$sw->chargeCustomer(['amount' => 1000, 'currency' => "USD", 'description' => "Payment for xyz service or product", 'customer' => $customer]);
+if ($sw->error) {
+    // Create error message for admins to see
+    $error = new Error;
+    $error->message = "subscription Failure during payment, card not charged. ----> " . $e ;
+    $error->save();
+    // delete sub and remove user data. 
+    $sub->delete();
+    $user->paid = 0;
+    $user->save();
+    //return back to payment page with error message.
+    return redirect()->back()->with("error", "Card not charged, could not create subscription");
+}
+
+// Now we know that the payment has been successful, we are free to return the user with payment successful message.
+return redirect()->back()->with("success", "Payment Successful!");
+```
 
 
