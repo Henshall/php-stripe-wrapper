@@ -240,7 +240,9 @@ We need both to create a subscription. Its possible to use existing customers an
 but here we will create a new plan, and a new customer, and use them to create a subscription. 
 
 #### 1) create a plan 
-run this code only one time to create a plan we will continue to usefor all future subscriptions. 
+Option A) Login into Strip and create a plan manually under the billing/products tab.
+
+Option B) Run the following code only one time to create a plan we will continue to use the plan for all future subscriptions. 
 ```php
 $sw = new StripeWrapper;
 $sw->setApiKey("sk_test_Gc4sdfgsdfhghsdfghsdjjjjhggg");
@@ -268,6 +270,9 @@ if ($sw->error) {
 // Where to put your logic if there is an error. (Save error to DB, or log file, or email to yourself etc.)
 }
 ```
+
+
+
 
 ### Create Subscriptions and charge existing customers on a recurring basis. 
 Here we will assume that you have already have a customer and a plan set up.
