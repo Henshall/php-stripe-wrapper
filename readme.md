@@ -315,7 +315,7 @@ if ($sw->error) {
 
 
 
-## Stripe Tips
+# Stripe Tips
 
 Lets say that once a user has a successful payment, you want to store the
 subscription in the database and also update the user record.
