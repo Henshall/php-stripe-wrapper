@@ -87,20 +87,16 @@ class StripeWrapper
     }
     
     // Creates a Subscription
-    public function ChargeAndSubscribeCustomerToPlan($customer, $plan){
+    public function createSubscription($data){
         if ($this->error) {return $this->error;}
         try {
             if ($this->error) {return $this->error;}
-            return \Stripe\Subscription::create([
-                "customer" => $customer->id,
-                "items" => [["plan" => $plan]]
-            ]);
+            return \Stripe\Subscription::create($data);
         } catch (\Exception $e) {
-            $this->error = "failed ChargeAndSubscribeCustomerToPlan " . $e;
+            $this->error = "failed createSubscription " . $e;
             return $this->error;
         }
     }
-    
     
     // Retrieves a subscription.
     public function retrieveSubscription($sub_id){
@@ -114,7 +110,7 @@ class StripeWrapper
     }
     
     // Cancels a subscription.
-    public function CancelSubscription($sub){
+    public function cancelSubscription($sub){
         if ($this->error) {return $this->error;}
         try {
             $sub->cancel();

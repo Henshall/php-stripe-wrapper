@@ -276,7 +276,7 @@ $key = $sw->setApiKey("sk_test_Gsdfsdfsdfsdfsdfdsfsdfsdfsdfsdf");
 $sw->validateApiKey($key);
 $plan = $sw->retrievePlan("40_dollar_monthly_subscription");        
 $customer = $sw->createCustomer(["name" => "testing dude", "email" => "test@test.com", "description" => "im a real person", "source" => $_POST["stripeToken"]]);
-$sw->ChargeAndSubscribeCustomerToPlan($customer, $plan);
+$sw->createSubscription(["customer" => $customer,  "items" => [["plan" => $plan]]]);
 if ($sw->error) {
     // Where to put your logic if there is an error. (Save error to DB, or log file, or email to yourself etc.)
     // die($sw->error));
@@ -292,7 +292,7 @@ $key = $sw->setApiKey("sk_test_Gsdfsdfsdfsdfsdfdsfsdfsdfsdfsdf");
 $sw->validateApiKey($key);
 $customer = $sw->retrieveCustomer("cus_GPeOHGPqGH1Qhc");
 $plan = $sw->retrievePlan("40_dollar_monthly_subscription");
-$sw->ChargeAndSubscribeCustomerToPlan($customer, $plan);
+$sw->createSubscription(["customer" => $customer,  "items" => [["plan" => $plan]]]);
 if ($sw->error) {
     // Where to put your logic if there is an error. (Save error to DB, or log file, or email to yourself etc.)
     // die($sw->error);
@@ -300,6 +300,17 @@ if ($sw->error) {
 ```
 
 
+### Create Subscriptions without retrieving data from stripe (subscription)
+Here we can condense our code down to just three lines since we already have the customer_id and the plan id.
+```php
+$sw = new StripeWrapper;
+$key = $sw->setApiKey("sk_test_Gsdfsdfsdfsdfsdfdsfsdfsdfsdfsdf");
+$sw->createSubscription(["customer" => "cus_GPeOHGPqGH1Qhc",  "items" => [["plan" => '40_dollar_monthly_subscription']]]);
+if ($sw->error) {
+    // Where to put your logic if there is an error. (Save error to DB, or log file, or email to yourself etc.)
+    // die($sw->error);
+}
+```
 
 
 ### Unsubscribe A Subscription.
@@ -308,7 +319,7 @@ To unsubscribe a subscription we need to get the subscription (use the stripe ob
 $sw = new StripeWrapper;
 $key = $sw->setApiKey("sk_test_Gsdfsdfsdfsdfsdfdsfsdfsdfsdfsdf");
 $sw->validateApiKey($key);
-$sw->CancelSubscription($sw->retrieveSubscription($stripe_sub_id));
+$sw->cancelSubscription($sw->retrieveSubscription($stripe_sub_id));
 if ($sw->error) {
     // Where to put your logic if there is an error. (Save error to DB, or log file, or email to yourself etc.)
     // die($sw->error);
