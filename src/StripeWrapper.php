@@ -26,7 +26,7 @@ class StripeWrapper
             } 
             return $key;
         } catch (\Exception $e) {
-            $this->error = "failed setApiKey " . $e;
+            $this->error = "setApiKey method failed: " . $e;
             return $this->error;
         }
     }
@@ -37,7 +37,7 @@ class StripeWrapper
         try {
             return \Stripe\Stripe::setApiKey($key);
         } catch (\Exception $e) {
-            $this->error = "failed setApiKey " . $e;
+            $this->error = "setApiKey method failed: " . $e;
             return $this->error;
         }
     }
@@ -48,7 +48,7 @@ class StripeWrapper
         try {
             return \Stripe\Charge::create($data);
         } catch (\Exception $e) {
-            $this->error = "failed Charge " . $e;
+            $this->error = "charge method failed: " . $e;
             return $this->error;
         }
     }
@@ -59,7 +59,7 @@ class StripeWrapper
         try {
             return \Stripe\Customer::create($data);
         } catch (\Exception $e) {
-            $this->error = "failed createCustomer " . $e;
+            $this->error = "createCustomer method failed: " . $e;
             return $this->error;
         }
     }
@@ -70,7 +70,7 @@ class StripeWrapper
         try {
             return \Stripe\Customer::retrieve($customer_id);
         } catch (\Exception $e) {
-            $this->error = "failed retrieveCustomer " . $e;
+            $this->error = "retrieveCustomer method failed: " . $e;
             return $this->error;
         }
     }
@@ -81,7 +81,7 @@ class StripeWrapper
         try {
             return \Stripe\Plan::create($data);
         } catch (\Exception $e) {
-            $this->error = "failed createPlan " . $e;
+            $this->error = "createPlan method failed: " . $e;
             return $this->error;
         }
     }
@@ -93,7 +93,7 @@ class StripeWrapper
             if ($this->error) {return $this->error;}
             return \Stripe\Subscription::create($data);
         } catch (\Exception $e) {
-            $this->error = "failed createSubscription " . $e;
+            $this->error = "createSubscription method failed: " . $e;
             return $this->error;
         }
     }
@@ -104,7 +104,7 @@ class StripeWrapper
         try {
             return \Stripe\Subscription::retrieve($sub_id);
         } catch (\Exception $e) {
-            $this->error = "failed retrieveSubscription " . $e;
+            $this->error = "retrieveSubscription failed: " . $e;
             return $this->error;
         }
     }
@@ -116,7 +116,7 @@ class StripeWrapper
             $sub->cancel();
             return $sub;
         } catch (\Exception $e) {
-            $this->error = "failed CancelSubscription " . $e;
+            $this->error = "cancelSubscription method failed: " . $e;
             return $this->error;
         }
     }
@@ -127,7 +127,7 @@ class StripeWrapper
         try {
             return \Stripe\Plan::all()["data"];
         } catch (\Exception $e) {
-            $this->error = "failed retrievePlans " . $e;
+            $this->error = "retrievePlans method failed: " . $e;
             return $this->error;
         }
     }  
@@ -138,7 +138,7 @@ class StripeWrapper
         try {
             return \Stripe\Plan::retrieve($plan_id);
         } catch (\Exception $e) {
-            $this->error = "failed retrievePlan " . $e;
+            $this->error = "retrievePlan method failed: " . $e;
             return $this->error;
         }
     }  
@@ -152,7 +152,7 @@ class StripeWrapper
         try {
             return json_decode($data)->data->object;
         } catch (\Exception $e) {
-            $this->error = "failed getWebhookInput " . $e;
+            $this->error = "getWebhookInput method failed: " . $e;
             return $this->error;
         }
         return "success";
