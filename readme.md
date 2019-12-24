@@ -196,8 +196,9 @@ Please see below for some example of what you can do with the token.
 Use this to charge customers when you don't need to collect information such as their address, or instructions regarding the product/service.
 ```php
 $sw = new StripeWrapper;
-$sw->setApiKey("sk_test_kalsdjfsdkfjasdfjkasjdfjs");
-$sw->anonymousOneTimeCharge(['amount' => 1000, 'currency' => "USD", 'description' => "Payment for xyz service or product", "source" => $_POST["stripeToken"]]);
+$key = $sw->setApiKey("sk_test_Gsdfsdfsdfsdfsdfdsfsdfsdfsdfsdf");
+$sw->validateApiKey($key);
+$sw->charge(['amount' => 1000, 'currency' => "USD", 'description' => "Payment for xyz service or product", "source" => $_POST["stripeToken"]]);
 if ($sw->error) {
     // Where to put your logic if there is an error. (Save error to DB, or log file, or email to yourself etc.)
     // die($sw->error));
@@ -209,9 +210,10 @@ Use this when you want to collect information about a customer. We will create a
 customer object in stripe, and then charge the customer after.
 ```php
 $sw = new StripeWrapper;
-$sw->setApiKey("sk_test_Gsdfsdfsdfsdfsdfdsfsdfsdfsdfsdf");
+$key = $sw->setApiKey("sk_test_Gsdfsdfsdfsdfsdfdsfsdfsdfsdfsdf");
+$sw->validateApiKey($key);
 $customer = $sw->createCustomer(["name" => "testing dude", "email" => "test@test.com", "description" => "im a real person", "source" => $_POST["stripeToken"]]);
-$sw->customerOneTimeCharge(['amount' => 1000, 'currency' => "USD", 'description' => "Payment for xyz service or product", 'customer' => $customer]);
+$sw->charge(['amount' => 1000, 'currency' => "USD", 'description' => "Payment for xyz service or product", 'customer' => $customer]);
 if ($sw->error) {
     // Where to put your logic if there is an error. (Save error to DB, or log file, or email to yourself etc.)
     // die($sw->error));
@@ -223,13 +225,16 @@ if ($sw->error) {
 Use this when you already have a customer - ei, you want to charge an existing customer
 with one one time fee. Here we need to retrieve a customer from stripe.
 ```php
+// instantiate object
 $sw = new StripeWrapper;
-// set secret key and pass to stripe.
-$sw->setApiKey("sk_test_sdfkasdjsdfsdfsdfsdffdfsd");
-//pass the customer id from stripe to get the customer object
+// set secret key
+$key = $sw->setApiKey("sk_test_Gsdfsdfsdfsdfsdfdsfsdfsdfsdfsdf");
+// validate secret key
+$sw->validateApiKey($key);
+// pass the customer id from stripe to retrieve the customer object
 $customer = $sw->retrieveCustomer("cus_GPeOHGPqGH1fdd");
-//create charge
-$sw->customerOneTimeCharge(['amount' => 1000, 'currency' => "USD", 'description' => "Payment for xyz service or product", 'customer_id' => $customer]);
+// create charge
+$sw->charge(['amount' => 1000, 'currency' => "USD", 'description' => "Payment for xyz service or product", 'customer_id' => $customer]);
 if ($sw->error) {
     // Where to put your logic if there is an error. (Save error to DB, or log file, or email to yourself etc.)
     // die($sw->error));
@@ -248,7 +253,8 @@ Option A) Login into Strip and create a plan manually under the billing/products
 Option B) Run the following code only one time to create a plan we will continue to use the plan for all future subscriptions. 
 ```php
 $sw = new StripeWrapper;
-$sw->setApiKey("sk_test_Gc4sdfgsdfhghsdfghsdjjjjhggg");
+$key = $sw->setApiKey("sk_test_Gsdfsdfsdfsdfsdfdsfsdfsdfsdfsdf");
+$sw->validateApiKey($key);
 // (Note: do not run this code with every subscription - we only need to create a plan one time.)
 // Make sure the amount is in cents
 // Currency types suppoted found here: https://stripe.com/docs/currencies  (Ex. USD, EUR, CAD, Etc.)
@@ -266,7 +272,8 @@ if ($sw->error) {
 Once the plan is set up, we can create a customer and use them to create the subscription.
 ```php
 $sw = new StripeWrapper;
-$sw->setApiKey("sk_test_Gsdfsdahfjshadfjhsadfjh");
+$key = $sw->setApiKey("sk_test_Gsdfsdfsdfsdfsdfdsfsdfsdfsdfsdf");
+$sw->validateApiKey($key);
 $plan = $sw->retrievePlan("40_dollar_monthly_subscription");        
 $customer = $sw->createCustomer(["name" => "testing dude", "email" => "test@test.com", "description" => "im a real person", "source" => $_POST["stripeToken"]]);
 $sw->ChargeAndSubscribeCustomerToPlan($customer, $plan);
@@ -281,7 +288,8 @@ Here we will assume that you have already have a customer and a plan set up.
 We will use them to create a subscription. Use this if you need to charge an existing customer.
 ```php
 $sw = new StripeWrapper;
-$sw->setApiKey("sk_test_Gsdfsdahfjshadfjhsadfjh");
+$key = $sw->setApiKey("sk_test_Gsdfsdfsdfsdfsdfdsfsdfsdfsdfsdf");
+$sw->validateApiKey($key);
 $customer = $sw->retrieveCustomer("cus_GPeOHGPqGH1Qhc");
 $plan = $sw->retrievePlan("40_dollar_monthly_subscription");
 $sw->ChargeAndSubscribeCustomerToPlan($customer, $plan);
@@ -298,7 +306,8 @@ if ($sw->error) {
 To unsubscribe a subscription we need to get the subscription (use the stripe objects id to retrieve the subscription )
 ```php
 $sw = new StripeWrapper;
-$sw->setApiKey("sk_test_Gsdfsdahfjshadfjhsadfjh");
+$key = $sw->setApiKey("sk_test_Gsdfsdfsdfsdfsdfdsfsdfsdfsdfsdf");
+$sw->validateApiKey($key);
 $sw->CancelSubscription($sw->retrieveSubscription($stripe_sub_id));
 if ($sw->error) {
     // Where to put your logic if there is an error. (Save error to DB, or log file, or email to yourself etc.)

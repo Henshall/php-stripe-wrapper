@@ -7,7 +7,7 @@ class StripeWrapper
     public $error = NULL;
     
     // Sets Stripe api key (this wrapper normally just uses the secret key)
-    public function setApiKey($key){
+    public function validateApiKey($key){
         if ($this->error) {return $this->error;}
         try {
             // Stripe does not validate api key when set - we need to validate in this method before we set it.
@@ -24,6 +24,17 @@ class StripeWrapper
             if (strpos($key, 'test') !== false && strpos($key, 'live') !== false){
                 throw new \Exception("apiKey does not have the word 'live' or 'test' in it, and therefore is not a stripe api key", 1);
             } 
+            return $key;
+        } catch (\Exception $e) {
+            $this->error = "failed setApiKey " . $e;
+            return $this->error;
+        }
+    }
+    
+    // Sets Stripe api key (this wrapper normally just uses the secret key)
+    public function setApiKey($key){
+        if ($this->error) {return $this->error;}
+        try {
             return \Stripe\Stripe::setApiKey($key);
         } catch (\Exception $e) {
             $this->error = "failed setApiKey " . $e;
@@ -31,13 +42,13 @@ class StripeWrapper
         }
     }
     
-    // Charges a credit card one time
-    public function anonymousOneTimeCharge($data){        
+    // Charges a credit card
+    public function charge($data){        
         if ($this->error) {return $this->error;}
         try {
             return \Stripe\Charge::create($data);
         } catch (\Exception $e) {
-            $this->error = "failed anonymousOneTimeCharge " . $e;
+            $this->error = "failed Charge " . $e;
             return $this->error;
         }
     }
@@ -49,17 +60,6 @@ class StripeWrapper
             return \Stripe\Customer::create($data);
         } catch (\Exception $e) {
             $this->error = "failed createCustomer " . $e;
-            return $this->error;
-        }
-    }
-    
-    // Charges a stripe customer
-    public function customerOneTimeCharge($data){       
-        if ($this->error) {return $this->error;}
-        try {
-            return \Stripe\Charge::create($data);
-        } catch (\Exception $e) {
-            $this->error = "failed customerOneTimeCharge " . $e;
             return $this->error;
         }
     }
