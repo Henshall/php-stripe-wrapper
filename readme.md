@@ -313,8 +313,9 @@ if ($sw->error) {
 ```
 
 
-### Unsubscribe A Subscription.
-To unsubscribe a subscription we need to get the subscription (use the stripe objects id to retrieve the subscription )
+### Cancel a Subscription.
+To cancel a subscription we need to retreive the subscription object from stripe, and then 
+use the cancel method. 
 ```php
 $sw = new StripeWrapper;
 $key = $sw->setApiKey("sk_test_Gsdfsdfsdfsdfsdfdsfsdfsdfsdfsdf");
@@ -326,10 +327,7 @@ if ($sw->error) {
 }
 ```
 
-
-
 # Process Webhooks
-
 Stripe webhooks can difficult to configure - so I wanted to include a few functions to help users process
 their webhooks. 
 
@@ -345,10 +343,6 @@ if ($sw->error) {
     die($this->error);
 } 
 ```
-
-
-
-
 
 # Stripe Tips
 
@@ -385,7 +379,7 @@ try {
 $sw = new StripeWrapper;
 $sw->setApiKey("sk_test_Gsdfsdfsdfsdfsdfdsfsdfsdfsdfsdf");
 $customer = $sw->createCustomer(["name" => "testing dude", "email" => "test@test.com", "description" => "im a real person", "source" => $_POST["stripeToken"]]);
-$sw->customerOneTimeCharge(['amount' => 1000, 'currency' => "USD", 'description' => "Payment for xyz service or product", 'customer' => $customer]);
+$sw->charge(['amount' => 1000, 'currency' => "USD", 'description' => "Payment for xyz service or product", 'customer' => $customer]);
 if ($sw->error) {
     // Create error message for admins to see if payment failed. This is important!
     $error = new Error;
