@@ -54,6 +54,7 @@ Use this to create a simple pop-up form.
 ### Front End Example 2:
 Use this to create an inline form with bootstrap. When copying make sure to change the scrf token and insert your stripe public key.
 ```html
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 <body>
     <div class="container">
         <div class="row mt-5">
