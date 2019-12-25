@@ -26,7 +26,7 @@ class StripeWrapper
             } 
             return $key;
         } catch (\Exception $e) {
-            $this->error = "setApiKey method failed: " . $e;
+            $this->error = "validateApiKey method failed: " . $e;
             return $this->error;
         }
     }
@@ -35,7 +35,8 @@ class StripeWrapper
     public function setApiKey($key){
         if ($this->error) {return $this->error;}
         try {
-            return \Stripe\Stripe::setApiKey($key);
+             \Stripe\Stripe::setApiKey($key);
+             return $key;
         } catch (\Exception $e) {
             $this->error = "setApiKey method failed: " . $e;
             return $this->error;
