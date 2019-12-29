@@ -1,6 +1,6 @@
 <?php 
 
-namespace Henshall\StripeWrapper;
+namespace Henshall;
 
 class StripeWrapper 
 {
