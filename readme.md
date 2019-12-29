@@ -50,7 +50,7 @@ Use this to create a simple pop-up form.
 </form>
 <br>
 Test Credit Card: <br>
-Number: 242424242424242	 <br>
+Number: 4242424242424242	 <br>
 Expiry: Any future date  <br>
 CVC:    Any 3 digits <br>
 <a href="https://stripe.com/docs/testing">https://stripe.com/docs/testing</a>
@@ -80,7 +80,7 @@ Use this to create an inline form with bootstrap. When copying make sure to chan
                     <img src="images/stripelogo.png" alt="" class="image mt-3">
                     <br>
                     Test Credit Card: <br>
-                    Number: 242424242424242	 <br>
+                    Number: 4242424242424242	 <br>
                     Expiry: Any future date  <br>
                     CVC:    Any 3 digits <br>
                     <a href="https://stripe.com/docs/testing">https://stripe.com/docs/testing</a>
