@@ -64,27 +64,32 @@ class StripeWrapper
             return $this->error;
         }
     }
-    
-    
-    
-    // Deletes a stripe customer
-    public function deleteCustomer($data){
-        if ($this->error) {return $this->error;}
-        try {
-            return \Stripe\Customer::delete($data);
-        } catch (\Exception $e) {
-            $this->error = "deleteCustomer method failed: " . $e;
-            return $this->error;
-        }
-    }
-    
-    // returns an instance of a stripe customer
+        
+    // Returns an instance of a stripe customer
     public function retrieveCustomer($customer_id){
         if ($this->error) {return $this->error;}
         try {
             return \Stripe\Customer::retrieve($customer_id);
         } catch (\Exception $e) {
             $this->error = "retrieveCustomer method failed: " . $e;
+            return $this->error;
+        }
+    }
+    
+    // Deletes a stripe customer
+    public function deleteCustomer($data){
+        if ($this->error) {return $this->error;}
+        try {
+            if ( gettype($data) == "string" ) {
+                $customer = \Stripe\Customer::retrieve($data);
+                $customer->delete();
+            } elseif ( gettype($data) == "object") {
+                $data->delete();
+            } else {
+                throw new \Exception("retrievePlan method failed:, could not process entity " . gettype($data), 1);
+            }
+        } catch (\Exception $e) {
+            $this->error = "deleteCustomer method failed: " . $e;
             return $this->error;
         }
     }

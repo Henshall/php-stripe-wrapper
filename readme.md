@@ -215,7 +215,7 @@ $sw->validateApiKey($key);
 $sw->charge(['amount' => 1000, 'currency' => "USD", 'description' => "Payment for xyz service or product", "source" => $_POST["stripeToken"]]);
 if ($sw->error) {
     // Where to put your logic if there is an error. (Save error to DB, or log file, or email to yourself etc.)
-    // die($sw->error));
+    // die($sw->error);
 }
 ```
 
@@ -230,7 +230,7 @@ $customer = $sw->createCustomer(["name" => "testing dude", "email" => "test@test
 $sw->charge(['amount' => 1000, 'currency' => "USD", 'description' => "Payment for xyz service or product", 'customer' => $customer]);
 if ($sw->error) {
     // Where to put your logic if there is an error. (Save error to DB, or log file, or email to yourself etc.)
-    // die($sw->error));
+    // die($sw->error);
 }
 ```
 
@@ -251,7 +251,7 @@ $customer = $sw->retrieveCustomer("cus_GPeOHGPqGH1fdd");
 $sw->charge(['amount' => 1000, 'currency' => "USD", 'description' => "Payment for xyz service or product", 'customer_id' => $customer]);
 if ($sw->error) {
     // Where to put your logic if there is an error. (Save error to DB, or log file, or email to yourself etc.)
-    // die($sw->error));
+    // die($sw->error);
 }
 ```
 
@@ -278,7 +278,7 @@ $sw->validateApiKey($key);
 $sw->createPlan(['id' => "40_dollar_monthly_subscription", 'amount' => 4000, 'currency' => "NZD", 'interval' => "month", 'product' => ['name' => 'subscriptions']]);
 if ($sw->error) {
     // Where to put your logic if there is an error. (Save error to DB, or log file, or email to yourself etc.)
-    // die($sw->error));
+    // die($sw->error);
 }
 ```
 
@@ -293,7 +293,7 @@ $customer = $sw->createCustomer(["name" => "testing dude", "email" => "test@test
 $sw->createSubscription(["customer" => $customer,  "items" => [["plan" => $plan]]]);
 if ($sw->error) {
     // Where to put your logic if there is an error. (Save error to DB, or log file, or email to yourself etc.)
-    // die($sw->error));
+    // die($sw->error);
 }
 ```
 
@@ -304,7 +304,7 @@ We will use them to create a subscription. Use this if you need to charge an exi
 $sw = new StripeWrapper;
 $key = $sw->setApiKey("sk_test_Gsdfsdfsdfsdfsdfdsfsdfsdfsdfsdf");
 $sw->validateApiKey($key);
-$customer = $sw->retrieveCustomer("cus_GPeOHGPqGH1Qhc");
+$customer = $sw->retrieveCustomer("cus_GPeOHsPqdH1Qhc");
 $plan = $sw->retrievePlan("40_dollar_monthly_subscription");
 $sw->createSubscription(["customer" => $customer,  "items" => [["plan" => $plan]]]);
 if ($sw->error) {
@@ -340,6 +340,21 @@ if ($sw->error) {
     // die($sw->error);
 }
 ```
+### Delete a Customer.
+To delete a customer we need to retrieve the customer object from stripe, and then 
+use the delete method. (here we are passing in the entire customer object, but you can also just pass in the customer id)
+```php
+$sw = new StripeWrapper;
+$key = $sw->setApiKey("sk_test_Gsdfsdfsdfsdfsdfdsfsdfsdfsdfsdf");
+$sw->validateApiKey($key);
+$customer = $sw->retrieveCustomer("cus_GPeOHsPqdH1Qhc");
+$sw->deleteCustomer( $customer );
+if ($sw->error) {
+    // Where to put your logic if there is an error. (Save error to DB, or log file, or email to yourself etc.)
+    // die($sw->error);
+}
+```
+
 
 # Process Webhooks
 Stripe webhooks can difficult to configure - so I wanted to include a few functions to help users process
