@@ -65,6 +65,19 @@ class StripeWrapper
         }
     }
     
+    
+    
+    // Deletes a stripe customer
+    public function deleteCustomer($data){
+        if ($this->error) {return $this->error;}
+        try {
+            return \Stripe\Customer::delete($data);
+        } catch (\Exception $e) {
+            $this->error = "deleteCustomer method failed: " . $e;
+            return $this->error;
+        }
+    }
+    
     // returns an instance of a stripe customer
     public function retrieveCustomer($customer_id){
         if ($this->error) {return $this->error;}
