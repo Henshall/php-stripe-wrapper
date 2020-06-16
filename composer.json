@@ -1,5 +1,5 @@
 {
-    "name": "henshall/PHPStripeWrapper",
+    "name": "henshall/php-stripe-wrapper",
     "description": "Simple Stripe wrapper used to make purchases, subscription, and distribute money wbetween accounts with Stripe Connect.",
     "authors": [{
         "name": "wes",
