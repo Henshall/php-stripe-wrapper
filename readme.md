@@ -11,7 +11,7 @@ lots of examples on how to use it.
 
 ## Installation with Composer:
 ```bash
-composer require henshall\stripe_wrapper
+composer require henshall\PHPStripeWrapper
 ```
 
 ## Pre-requisites
