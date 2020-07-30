@@ -373,6 +373,38 @@ if ($sw->error) {
 } 
 ```
 
+# Create Webhook
+You can create a webhook with the following code:
+
+```php
+$sw = new StripeWrapper;
+$key = $sw->setApiKey("sk_test_Gsdfsdfsdfsdfsdfdsfsdfsdfsdfsdf");
+$webhookData = [ 'url' => 'https://example.com/my/webhook/endpoint', 'enabled_events' => [
+    'invoice.payment_failed',
+    'customer.subscription.deleted',
+],
+];
+$sw->createWebhook($webhookData);
+if ($sw->error) {
+    // Where to put your logic if there is an error. (Save error to DB, or log file, or email to yourself etc.)
+    // die($sw->error);
+}
+```
+
+# Retreive Webhook
+You can retreive a webhook with the following code:
+
+```php
+$sw = new StripeWrapper;
+$key = $sw->setApiKey("sk_test_Gsdfsdfsdfsdfsdfdsfsdfsdfsdfsdf");
+$sw->retrieveWebhook($webhookId);
+if ($sw->error) {
+    // Where to put your logic if there is an error. (Save error to DB, or log file, or email to yourself etc.)
+    // die($sw->error);
+}
+```
+
+
 # Stripe Tips
 
 Lets say that once a user has a successful payment, you want to store the
