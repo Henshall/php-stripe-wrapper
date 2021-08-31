@@ -5,6 +5,7 @@ namespace Henshall;
 class StripeWrapper 
 {
     public $error = NULL;
+    public $secretKey = NULL;
     
     // Sets Stripe api key (this wrapper normally just uses the secret key)
     public function validateApiKey($key){
@@ -36,6 +37,7 @@ class StripeWrapper
         if ($this->error) {return $this->error;}
         try {
             \Stripe\Stripe::setApiKey($key);
+            $this->secretKey = $key;
             return $key;
         } catch (\Exception $e) {
             $this->error = "setApiKey method failed: " . $e;
@@ -178,43 +180,52 @@ class StripeWrapper
     }
     
     // Retreives all webhooks
-public function retreiveAllWebhooks($data = null){
-    if ($this->error) {return $this->error;}
-    try {
-        return \Stripe\WebhookEndpoint::all($data)["data"];
-    } catch (\Exception $e) {
-        $this->error = "retreiveAllWebhooks method failed: " . $e;
-        return $this->error;
-    }
-}
-
-// Creates a Webhook
-public function createWebhook($data){
-    if ($this->error) {return $this->error;}
-    try {
+    public function retreiveAllWebhooks($data = null){
         if ($this->error) {return $this->error;}
-        return \Stripe\WebhookEndpoint::create($data);
-    } catch (\Exception $e) {
-        $this->error = "createWebhook method failed: " . $e;
-        return $this->error;
+        try {
+            return \Stripe\WebhookEndpoint::all($data)["data"];
+        } catch (\Exception $e) {
+            $this->error = "retreiveAllWebhooks method failed: " . $e;
+            return $this->error;
+        }
     }
-}
-
-// Retreices a Webhook
-public function retrieveWebhook($webhookId){
-    if ($this->error) {return $this->error;}
-    try {
+    
+    // Creates a Webhook
+    public function createWebhook($data){
         if ($this->error) {return $this->error;}
-        return \Stripe\WebhookEndpoint::retrieve($webhookId);
-    } catch (\Exception $e) {
-        $this->error = "retrieveWebhook method failed: " . $e;
-        return $this->error;
+        try {
+            if ($this->error) {return $this->error;}
+            return \Stripe\WebhookEndpoint::create($data);
+        } catch (\Exception $e) {
+            $this->error = "createWebhook method failed: " . $e;
+            return $this->error;
+        }
     }
-}
     
+    // Retreices a Webhook
+    public function retrieveWebhook($webhookId){
+        if ($this->error) {return $this->error;}
+        try {
+            if ($this->error) {return $this->error;}
+            return \Stripe\WebhookEndpoint::retrieve($webhookId);
+        } catch (\Exception $e) {
+            $this->error = "retrieveWebhook method failed: " . $e;
+            return $this->error;
+        }
+    }
     
-    
-    
+    // Retreives Balance
+    public function retrieveBalance(){
+        if ($this->error) {return $this->error;}
+        try {
+            if ($this->error) {return $this->error;}
+            $stripeClient = new \Stripe\StripeClient($this->secretKey);
+            return $stripeClient->balance->retrieve();
+        } catch (\Exception $e) {
+            $this->error = "retrieveBalance method failed: " . $e;
+            return $this->error;
+        }
+    }
     
 }
 
