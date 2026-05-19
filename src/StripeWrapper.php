@@ -292,4 +292,124 @@ class StripeWrapper
         }
     }
 
+    // ── Stripe Connect ────────────────────────────────────────────────────────
+
+    /**
+     * Creates a Stripe Express Connect account for a restaurant.
+     *
+     * $data keys:
+     *   - type         (string)  'express' (default)
+     *   - country      (string)  ISO 3166-1 alpha-2, e.g. 'ES'
+     *   - email        (string)  Pre-fill the account holder's email (optional)
+     *   - metadata     (array)   Optional key/value metadata
+     *   - capabilities (array)   Override default capabilities (optional)
+     */
+    public function createConnectAccount($data) {
+        if ($this->error) {return $this->error;}
+        try {
+            $params = [
+                'type'         => $data['type'] ?? 'express',
+                'capabilities' => $data['capabilities'] ?? [
+                    'card_payments' => ['requested' => true],
+                    'transfers'     => ['requested' => true],
+                ],
+            ];
+            if (!empty($data['country']))  $params['country']  = strtoupper($data['country']);
+            if (!empty($data['email']))    $params['email']    = $data['email'];
+            if (!empty($data['metadata'])) $params['metadata'] = $data['metadata'];
+            return \Stripe\Account::create($params);
+        } catch (\Exception $e) {
+            $this->error = "createConnectAccount method failed: " . $e;
+            return $this->error;
+        }
+    }
+
+    /**
+     * Retrieves a Connect account by ID.
+     */
+    public function retrieveConnectAccount($accountId) {
+        if ($this->error) {return $this->error;}
+        try {
+            return \Stripe\Account::retrieve($accountId);
+        } catch (\Exception $e) {
+            $this->error = "retrieveConnectAccount method failed: " . $e;
+            return $this->error;
+        }
+    }
+
+    /**
+     * Creates an account link for onboarding or updating a Connect account.
+     *
+     * $data keys:
+     *   - account     (string) Connect account ID (acct_xxx)
+     *   - refresh_url (string) URL if the link expires before completion
+     *   - return_url  (string) URL after the owner finishes onboarding
+     *   - type        (string) 'account_onboarding' (default) or 'account_update'
+     */
+    public function createAccountLink($data) {
+        if ($this->error) {return $this->error;}
+        try {
+            return \Stripe\AccountLink::create([
+                'account'     => $data['account'],
+                'refresh_url' => $data['refresh_url'],
+                'return_url'  => $data['return_url'],
+                'type'        => $data['type'] ?? 'account_onboarding',
+            ]);
+        } catch (\Exception $e) {
+            $this->error = "createAccountLink method failed: " . $e;
+            return $this->error;
+        }
+    }
+
+    /**
+     * Creates a login link so a Connect account holder can access their Express dashboard.
+     */
+    public function createLoginLink($accountId) {
+        if ($this->error) {return $this->error;}
+        try {
+            return \Stripe\Account::createLoginLink($accountId);
+        } catch (\Exception $e) {
+            $this->error = "createLoginLink method failed: " . $e;
+            return $this->error;
+        }
+    }
+
+    // ── Payment Checkout ──────────────────────────────────────────────────────
+
+    /**
+     * Creates a one-time payment Checkout Session (mode=payment) for order collection.
+     * Routes funds to a Connect account with an application fee.
+     *
+     * $data keys:
+     *   - line_items            (array)  Stripe line_items array
+     *   - success_url           (string)
+     *   - cancel_url            (string)
+     *   - connect_account_id    (string) Destination Connect account (acct_xxx)
+     *   - application_fee_cents (int)    Platform fee in smallest currency unit
+     *   - currency              (string) ISO currency code, e.g. 'eur'
+     *   - customer_email        (string) Pre-fill customer email (optional)
+     *   - metadata              (array)  Optional metadata
+     */
+    public function createPaymentCheckoutSession($data) {
+        if ($this->error) {return $this->error;}
+        try {
+            $params = [
+                'mode'        => 'payment',
+                'line_items'  => $data['line_items'],
+                'success_url' => $data['success_url'],
+                'cancel_url'  => $data['cancel_url'],
+                'payment_intent_data' => [
+                    'application_fee_amount' => $data['application_fee_cents'],
+                    'transfer_data'          => ['destination' => $data['connect_account_id']],
+                ],
+            ];
+            if (!empty($data['customer_email'])) $params['customer_email'] = $data['customer_email'];
+            if (!empty($data['metadata']))        $params['metadata']       = $data['metadata'];
+            return \Stripe\Checkout\Session::create($params);
+        } catch (\Exception $e) {
+            $this->error = "createPaymentCheckoutSession method failed: " . $e;
+            return $this->error;
+        }
+    }
+
 }
