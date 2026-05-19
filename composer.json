@@ -1,13 +1,13 @@
 {
     "name": "henshall/php-stripe-wrapper",
-    "description": "Simple Stripe wrapper used to make purchases, subscription, and distribute money wbetween accounts with Stripe Connect.",
+    "description": "Simple Stripe wrapper used to make purchases, subscriptions, and checkout sessions.",
     "authors": [{
         "name": "wes",
         "email": "weshenshall@gmail.com"
     }],
-    "minimum-stability": "dev",
+    "minimum-stability": "stable",
     "require": {
-        "stripe/stripe-php": "^7.74.0"
+        "stripe/stripe-php": "^14.0"
     },
     "autoload": {
         "psr-4": {
