@@ -412,4 +412,227 @@ class StripeWrapper
         }
     }
 
+    // ── Stripe Terminal ───────────────────────────────────────────────────────
+
+    /**
+     * Creates a Terminal connection token. Required by the Terminal SDK (e.g.
+     * Tap to Pay on a staff phone) to authenticate the device with Stripe.
+     *
+     * $data keys (all optional):
+     *   - location       (string) Terminal Location ID (tml_xxx) to scope the token
+     *   - stripe_account (string) Connected account to issue the token on behalf of
+     */
+    public function createConnectionToken($data = []) {
+        if ($this->error) {return $this->error;}
+        try {
+            $params = [];
+            if (!empty($data['location'])) $params['location'] = $data['location'];
+            $opts = !empty($data['stripe_account']) ? ['stripe_account' => $data['stripe_account']] : [];
+            return \Stripe\Terminal\ConnectionToken::create($params, $opts);
+        } catch (\Exception $e) {
+            $this->error = "createConnectionToken method failed: " . $e;
+            return $this->error;
+        }
+    }
+
+    /**
+     * Creates a Terminal Location (a physical site that readers are grouped under).
+     * Stripe requires an address; display_name is shown in the dashboard.
+     *
+     * $data keys:
+     *   - display_name   (string) Required. Human label, e.g. the restaurant name
+     *   - address        (array)  Required. line1, city, country (ISO-2), postal_code...
+     *   - metadata       (array)  Optional
+     *   - stripe_account (string) Optional connected account to own the location
+     */
+    public function createTerminalLocation($data) {
+        if ($this->error) {return $this->error;}
+        try {
+            $params = [
+                'display_name' => $data['display_name'],
+                'address'      => $data['address'],
+            ];
+            if (!empty($data['metadata'])) $params['metadata'] = $data['metadata'];
+            $opts = !empty($data['stripe_account']) ? ['stripe_account' => $data['stripe_account']] : [];
+            return \Stripe\Terminal\Location::create($params, $opts);
+        } catch (\Exception $e) {
+            $this->error = "createTerminalLocation method failed: " . $e;
+            return $this->error;
+        }
+    }
+
+    /**
+     * Registers a physical/smart reader (e.g. WisePOS E, S700) to a Location.
+     * The registration_code is shown on the reader's screen during setup.
+     *
+     * $data keys:
+     *   - registration_code (string) Required. Code from the reader's screen
+     *   - location          (string) Required. Terminal Location ID (tml_xxx)
+     *   - label             (string) Optional human label
+     *   - metadata          (array)  Optional
+     *   - stripe_account    (string) Optional connected account
+     */
+    public function registerReader($data) {
+        if ($this->error) {return $this->error;}
+        try {
+            $params = [
+                'registration_code' => $data['registration_code'],
+                'location'          => $data['location'],
+            ];
+            if (!empty($data['label']))    $params['label']    = $data['label'];
+            if (!empty($data['metadata'])) $params['metadata'] = $data['metadata'];
+            $opts = !empty($data['stripe_account']) ? ['stripe_account' => $data['stripe_account']] : [];
+            return \Stripe\Terminal\Reader::create($params, $opts);
+        } catch (\Exception $e) {
+            $this->error = "registerReader method failed: " . $e;
+            return $this->error;
+        }
+    }
+
+    /**
+     * Lists registered readers, optionally filtered by location/status.
+     *
+     * $data keys (all optional):
+     *   - location       (string) Filter to a Location ID
+     *   - status         (string) 'online' | 'offline'
+     *   - stripe_account (string) Connected account
+     */
+    public function listReaders($data = []) {
+        if ($this->error) {return $this->error;}
+        try {
+            $params = [];
+            if (!empty($data['location'])) $params['location'] = $data['location'];
+            if (!empty($data['status']))   $params['status']   = $data['status'];
+            $opts = !empty($data['stripe_account']) ? ['stripe_account' => $data['stripe_account']] : [];
+            return \Stripe\Terminal\Reader::all($params, $opts)["data"];
+        } catch (\Exception $e) {
+            $this->error = "listReaders method failed: " . $e;
+            return $this->error;
+        }
+    }
+
+    /**
+     * Creates a card-present PaymentIntent for in-person collection (smart reader
+     * or Tap to Pay). Routes funds to a Connect account as a destination charge,
+     * mirroring createPaymentCheckoutSession. Each call is a single charge, so one
+     * order can be split across any number of these.
+     *
+     * $data keys:
+     *   - amount                (int)    Required. Smallest currency unit
+     *   - currency              (string) Required. ISO code, e.g. 'eur'
+     *   - connect_account_id    (string) Destination Connect account (acct_xxx)
+     *   - application_fee_cents (int)    Optional platform fee for THIS charge
+     *   - on_behalf_of          (string) Optional merchant of record (usually the
+     *                                    connected account) - recommended for
+     *                                    card-present destination charges
+     *   - capture_method        (string) 'automatic' (default) or 'manual'
+     *   - metadata              (array)  Optional (carry order_id for the webhook)
+     *   - payment_method_types  (array)  Defaults to ['card_present']
+     */
+    public function createCardPresentIntent($data) {
+        if ($this->error) {return $this->error;}
+        try {
+            $params = [
+                'amount'               => $data['amount'],
+                'currency'             => $data['currency'],
+                'payment_method_types' => $data['payment_method_types'] ?? ['card_present'],
+                'capture_method'       => $data['capture_method'] ?? 'automatic',
+            ];
+            if (!empty($data['connect_account_id'])) {
+                $params['transfer_data'] = ['destination' => $data['connect_account_id']];
+            }
+            if (isset($data['application_fee_cents']) && $data['application_fee_cents'] > 0) {
+                $params['application_fee_amount'] = $data['application_fee_cents'];
+            }
+            if (!empty($data['on_behalf_of'])) $params['on_behalf_of'] = $data['on_behalf_of'];
+            if (!empty($data['metadata']))     $params['metadata']     = $data['metadata'];
+            return \Stripe\PaymentIntent::create($params);
+        } catch (\Exception $e) {
+            $this->error = "createCardPresentIntent method failed: " . $e;
+            return $this->error;
+        }
+    }
+
+    /**
+     * Hands a PaymentIntent to a smart reader to collect payment (server-driven).
+     * Not used for Tap to Pay, where the on-device SDK collects instead.
+     *
+     * $data keys:
+     *   - reader         (string) Required. Reader ID (tmr_xxx)
+     *   - payment_intent (string) Required. PaymentIntent ID (pi_xxx)
+     *   - stripe_account (string) Optional connected account
+     */
+    public function processPaymentIntent($data) {
+        if ($this->error) {return $this->error;}
+        try {
+            $opts = !empty($data['stripe_account']) ? ['stripe_account' => $data['stripe_account']] : [];
+            $client = new \Stripe\StripeClient($this->secretKey);
+            return $client->terminal->readers->processPaymentIntent(
+                $data['reader'],
+                ['payment_intent' => $data['payment_intent']],
+                $opts
+            );
+        } catch (\Exception $e) {
+            $this->error = "processPaymentIntent method failed: " . $e;
+            return $this->error;
+        }
+    }
+
+    /**
+     * Cancels the in-progress action on a smart reader (e.g. staff aborts a
+     * collection before the customer taps).
+     */
+    public function cancelReaderAction($reader, $stripe_account = null) {
+        if ($this->error) {return $this->error;}
+        try {
+            $opts = $stripe_account ? ['stripe_account' => $stripe_account] : [];
+            $client = new \Stripe\StripeClient($this->secretKey);
+            return $client->terminal->readers->cancelAction($reader, [], $opts);
+        } catch (\Exception $e) {
+            $this->error = "cancelReaderAction method failed: " . $e;
+            return $this->error;
+        }
+    }
+
+    /**
+     * Retrieves a PaymentIntent so callers can poll its status after collection.
+     */
+    public function retrievePaymentIntent($id) {
+        if ($this->error) {return $this->error;}
+        try {
+            return \Stripe\PaymentIntent::retrieve($id);
+        } catch (\Exception $e) {
+            $this->error = "retrievePaymentIntent method failed: " . $e;
+            return $this->error;
+        }
+    }
+
+    /**
+     * Captures a manual-capture PaymentIntent (only needed when capture_method=manual).
+     */
+    public function capturePaymentIntent($id) {
+        if ($this->error) {return $this->error;}
+        try {
+            $intent = \Stripe\PaymentIntent::retrieve($id);
+            return $intent->capture();
+        } catch (\Exception $e) {
+            $this->error = "capturePaymentIntent method failed: " . $e;
+            return $this->error;
+        }
+    }
+
+    /**
+     * Cancels a PaymentIntent before it is captured.
+     */
+    public function cancelPaymentIntent($id) {
+        if ($this->error) {return $this->error;}
+        try {
+            $intent = \Stripe\PaymentIntent::retrieve($id);
+            return $intent->cancel();
+        } catch (\Exception $e) {
+            $this->error = "cancelPaymentIntent method failed: " . $e;
+            return $this->error;
+        }
+    }
+
 }
